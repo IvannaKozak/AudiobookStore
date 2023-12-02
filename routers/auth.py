@@ -1,90 +1,76 @@
-# from flask import Blueprint, request, jsonify
-# from flask_restful import Api, Resource
-# from models import db, User
-# from flask_bcrypt import Bcrypt
-# import jwt
-# from datetime import datetime, timedelta
-
-# auth_bp = Blueprint('auth_bp', __name__)
-# api = Api(auth_bp)
-# bcrypt = Bcrypt()
-
-# SECRET_KEY = "6414c382523609c6639ad95059572736"
-
-# from functools import wraps
-# from flask import request, jsonify
-# import jwt
-
-# def token_required(f):
-#     @wraps(f)
-#     def decorated(*args, **kwargs):
-#         token = None
-
-#         if 'Authorization' in request.headers:
-#             token = request.headers['Authorization'].split(" ")[1]
-
-#         if not token:
-#             return jsonify({'message': 'Token is missing!'}), 401
-
-#         try:
-#             data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
-#             current_user = User.query.filter_by(id=data['id']).first()
-#         except:
-#             return jsonify({'message': 'Token is invalid!'}), 401
-
-#         return f(current_user, *args, **kwargs)
-
-#     return decorated
+from flask import Blueprint, request, jsonify
+from models import db, User
+from flask_bcrypt import Bcrypt
+from jose import jwt
+from datetime import datetime, timedelta
 
 
-# class RegisterUser(Resource):
-#     def post(self):
-#         data = request.get_json()
-#         hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
-
-#         new_user = User(
-#             username=data['username'],
-#             email=data['email'],
-#             hashed_password=hashed_password,
-#             role=data['role']
-#             # Add other fields as necessary
-#         )
-#         db.session.add(new_user)
-#         db.session.commit()
-#         return jsonify({"message": "User registered successfully."}), 201
+auth_bp = Blueprint('auth_bp', __name__)
+bcrypt = Bcrypt()
 
 
-# class LoginUser(Resource):
-#     def post(self):
-#         data = request.get_json()
-#         user = User.query.filter_by(username=data['username']).first()
+# Your SECRET_KEY and ALGORITHM
+SECRET_KEY = "1bc991a9acbaf16a0183effe123645d81e3d7b1c17d1541pf8e869df41654a39"
+ALGORITHM = "HS256"
 
-#         if user and bcrypt.check_password_hash(user.hashed_password, data['password']):
-#             token = jwt.encode({
-#                 'sub': user.username,
-#                 'id': user.id,
-#                 'exp': datetime.utcnow() + timedelta(hours=1)
-#             }, SECRET_KEY, algorithm="HS256")
-#             return jsonify({'token': token})
-        
+
+@auth_bp.route('/register', methods=['POST'])
+def create_user():
+    data = request.get_json()
+    hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
+
+    new_user = User(
+        username=data['username'],
+        email=data['email'],
+        hashed_password=hashed_password,
+        role=data['role']
+    )
+    db.session.add(new_user)
+    db.session.commit()
+    return jsonify({"message": "User was successfully created"}), 201
+
+
+def create_access_token(username: str, user_id: int, role: str, expires_delta: timedelta):
+    encode = {'sub': username, 'id': user_id, 'role': role}
+    expires = datetime.utcnow() + expires_delta
+    encode.update({'exp': expires})
+    return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
+
+
+@auth_bp.route('/token', methods=['POST'])
+def login_for_access_token():
+    data = request.form
+    username = data.get('username')
+    password = data.get('password')
+
+    user = User.query.filter_by(username=username).first()
+    if user and bcrypt.check_password_hash(user.hashed_password, password):
+        access_token = create_access_token(user.username, user.id, user.role, timedelta(minutes=60))
+        return jsonify({"access_token": access_token, "token_type": "bearer"})
+    else:
+        return jsonify({"message": "Invalid username or password"}), 401
+    
+
+
+# @auth_bp.route('/login', methods=['POST'])
+# def login():
+#     username = request.form['username']
+#     password = request.form['password']
+
+#     user = User.query.filter_by(username=username).first()
+#     if user and bcrypt.check_password_hash(user.hashed_password, password):
+#         # Generate a token here if needed
+#         return jsonify({"message": "Login successful"}), 200
+#     else:
 #         return jsonify({"message": "Invalid username or password"}), 401
+    
 
-# class ListUsers(Resource):
-#     def get(self):
-#         users = User.query.all()
-#         user_list = [{'username': user.username, 'email': user.email} for user in users]
-#         return jsonify(user_list)
+# @auth_bp.route('/login', methods=['POST'])
+# def login():
+#     data = request.get_json()
+#     user = User.query.filter_by(username=data['username']).first()
 
-# class DeleteUser(Resource):
-#     def delete(self, username):
-#         user = User.query.filter_by(username=username).first()
-#         if user:
-#             db.session.delete(user)
-#             db.session.commit()
-#             return jsonify({"message": f"User {username} deleted"})
-#         return jsonify({"message": "User not found"}), 404
-
-# api.add_resource(RegisterUser, '/register')
-# api.add_resource(LoginUser, '/login')
-# api.add_resource(ListUsers, '/users')
-# api.add_resource(DeleteUser, '/delete/<string:username>')
+#     if user and bcrypt.check_password_hash(user.hashed_password, data['password']):
+#         return jsonify({"message": "Login successful"}), 200
+#     else:
+#         return jsonify({"message": "Invalid username or password"}), 401

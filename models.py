@@ -12,8 +12,6 @@ class User(db.Model):
     hashed_password = db.Column(db.String(200), nullable=True)
     role = db.Column(db.String(45), nullable=True)
 
-    # # Relationship with UserLibrary
-    # library = db.relationship('UserLibrary', backref='users', lazy=True)
 
 class Category(db.Model):
     __tablename__ = 'category'
@@ -29,8 +27,6 @@ class Audiobook(db.Model):
     description = db.Column(db.String(2000), nullable=True)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=True)
 
-    # Relationship (optional, if you want to use it in queries)
-    category = db.relationship('Category', backref='audiobook', lazy=True)
 
 
 # class UserLibrary(db.Model):
