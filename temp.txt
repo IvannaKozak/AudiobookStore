@@ -1,0 +1,128 @@
+"/auth/register": {
+        "post": {
+          "tags": [
+            "authentication"
+          ],
+          "summary": "Register a new user",
+          "description": "Endpoint for user registration.",
+          "consumes": ["application/json"],
+          "produces": ["application/json"],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "User data for registration",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/UserRegistration"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User registered successfully"
+            }
+          }
+        }
+      },
+      "/auth/login": {
+        "post": {
+          "tags": [
+            "authentication"
+          ],
+          "summary": "User login",
+          "description": "Endpoint for user authentication and token retrieval.",
+          "consumes": ["application/json"],
+          "produces": ["application/json"],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "User login credentials",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/UserLogin"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Authentication successful, token returned"
+            },
+            "401": {
+              "description": "Invalid username or password"
+            }
+          }
+        }
+      },
+      "/auth/users": {
+        "get": {
+          "tags": [
+            "users"
+          ],
+          "summary": "List all users",
+          "description": "Endpoint to retrieve a list of all users.",
+          "produces": ["application/json"],
+          "responses": {
+            "200": {
+              "description": "List of users",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/User"
+                }
+              }
+            }
+          }
+        }
+      },
+      "/auth/delete/{username}": {
+        "delete": {
+          "tags": [
+            "users"
+          ],
+          "summary": "Delete a user",
+          "description": "Endpoint to delete a user by username.",
+          "produces": ["application/json"],
+          "parameters": [
+            {
+              "name": "username",
+              "in": "path",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User deleted"
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        }
+      },
+
+            "UserRegistration": {
+        "type": "object",
+        "properties": {
+          "username": {"type": "string"},
+          "email": {"type": "string"},
+          "password": {"type": "string"},
+          "role": {"type": "string"}
+        }
+      },
+      "UserLogin": {
+        "type": "object",
+        "properties": {
+          "username": {"type": "string"},
+          "password": {"type": "string"}
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "username": {"type": "string"},
+          "email": {"type": "string"}
+        }
+      },

@@ -3,8 +3,12 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from models import db, Audiobook, Category
 from routers.audiobook import audiobook_bp
+from routers.category import category_bp
+# from routers.auth import auth_bp
 from flask_swagger_ui import get_swaggerui_blueprint
 from flask_migrate import Migrate
+from flask_restful import Api
+
 
 
 app = Flask(__name__)
@@ -19,10 +23,11 @@ CORS(app)
 
 # Routers setup
 
-# app.register_blueprint(auth.router, url_prefix='/auth')
+# app.register_blueprint(auth_bp, url_prefix='/auth')
 # app.register_blueprint(admin.router, url_prefix='/admin')
 # app.register_blueprint(users.router, url_prefix='/users')
 app.register_blueprint(audiobook_bp, url_prefix='/audiobook')
+app.register_blueprint(category_bp, url_prefix='/category')
 
 
 # Swagger

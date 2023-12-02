@@ -11,6 +11,9 @@
     "paths": {
       "/audiobook/": {
         "get": {
+          "tags": [
+            "audiobook"
+          ],
           "summary": "List all audiobooks",
           "description": "Retrieve a list of all audiobooks available in the store.",
           "responses": {
@@ -26,6 +29,9 @@
           }
         },
         "post": {
+          "tags": [
+            "audiobook"
+          ],
           "summary": "Add a new audiobook",
           "description": "Add a new audiobook to the store.",
           "parameters": [
@@ -45,16 +51,119 @@
             }
           }
         }
+      },
+      "/audiobook/{audiobookId}": {
+        "delete": {
+          "tags": [
+            "audiobook"
+          ],
+          "summary": "Delete an audiobook",
+          "description": "Deletes the audiobook with the specified ID",
+          "operationId": "deleteAudiobook",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "audiobookId",
+              "in": "path",
+              "description": "ID of the audiobook to delete",
+              "required": true,
+              "type": "integer",
+              "format": "int64"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Audiobook deleted successfully"
+            },
+            "404": {
+              "description": "Audiobook not found"
+            }
+          }
+        }
+      },
+      "/category/": {
+        "get": {
+          "tags": [
+            "category"
+          ],
+          "summary": "List all categories",
+          "description": "Retrieve a list of all categories for audiobooks.",
+          "responses": {
+            "200": {
+              "description": "An array of categories",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/Category"
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": [
+            "category"
+          ],
+          "summary": "Add a new category",
+          "description": "Create a new category for audiobooks.",
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Category object that needs to be added",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/Category"
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Category created"
+            }
+          }
+        }
+      },
+      "/category/{categoryId}": {
+        "delete": {
+          "tags": [
+            "category"
+          ],
+          "summary": "Delete a category",
+          "description": "Deletes a category with the specified ID.",
+          "parameters": [
+            {
+              "name": "categoryId",
+              "in": "path",
+              "required": true,
+              "type": "integer",
+              "format": "int64",
+              "description": "ID of the category to delete"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Category deleted"
+            },
+            "404": {
+              "description": "Category not found"
+            }
+          }
+        }
       }
+       
     },
     "definitions": {
       "Audiobook": {
         "type": "object",
-        "required": ["title", "description"],
+        "required": ["title", "description", "category_id"],
         "properties": {
           "id": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "readOnly": true
           },
           "title": {
             "type": "string",
@@ -63,9 +172,28 @@
           "description": {
             "type": "string",
             "example": "A novel written by F. Scott Fitzgerald."
+          },
+          "category_id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 1
+          }
+        }
+      },
+      "Category": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "readOnly": true
+          },
+          "category_name": {
+            "type": "string",
+            "example": "Science Fiction"
           }
         }
       }
-    }
   }
+}
   
