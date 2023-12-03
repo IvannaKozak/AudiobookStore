@@ -1,17 +1,46 @@
 from flask import Blueprint, request, jsonify
 from models import db, User
 from flask_bcrypt import Bcrypt
-from jose import jwt
+from jose import jwt, JWTError
 from datetime import datetime, timedelta
-
+from functools import wraps
 
 auth_bp = Blueprint('auth_bp', __name__)
 bcrypt = Bcrypt()
 
 
 # Your SECRET_KEY and ALGORITHM
-SECRET_KEY = "1bc991a9acbaf16a0183effe123645d81e3d7b1c17d1541pf8e869df41654a39"
+SECRET_KEY = "1bc991a9acbaf16a0183effe123615d85e3d7b1c17d1541pf8e869df41654a39"
 ALGORITHM = "HS256"
+
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+        # Check if the Authorization header is present and formatted correctly
+        if 'Authorization' in request.headers:
+            try:
+                auth_header = request.headers['Authorization']
+                token = auth_header.split(" ")[1]
+            except IndexError:
+                return jsonify({'message': 'Bearer token malformed.'}), 401
+
+        # If no token is present, return an error
+        if not token:
+            return jsonify({'message': 'Token is missing!'}), 401
+
+        # If a token is present, verify it and proceed
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            # Here you could add additional verification or user loading if needed
+        except JWTError as e:
+            return jsonify({'message': 'Token is invalid!'}), 401
+
+        # If everything is fine, call the actual route function
+        return f(*args, **kwargs)
+
+    return decorated
+
 
 
 @auth_bp.route('/register', methods=['POST'])

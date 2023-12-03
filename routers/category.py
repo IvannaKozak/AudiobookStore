@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 
 from models import db, Category
+from routers.auth import token_required
 
 category_bp = Blueprint('category_bp', __name__)
 
@@ -19,8 +20,11 @@ def get_categories():
     return jsonify(category_list), 200
 
 @category_bp.route('/<int:category_id>', methods=['DELETE'])
+@token_required
 def delete_category(category_id):
     category = Category.query.get_or_404(category_id)
     db.session.delete(category)
     db.session.commit()
     return jsonify({"message": "Category deleted"}), 200
+
+# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJpdmFua2EiLCJpZCI6MSwicm9sZSI6ImFkbWluIiwiZXhwIjoxNzAxNjA5MTE4fQ.LIJIKBAy_3eSJzQvgyZJsYw3x6TDV0wXMM8lX3wC5NQ

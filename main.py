@@ -32,7 +32,7 @@ app.register_blueprint(category_bp, url_prefix='/category')
 
 # Swagger
 
-SWAGGER_URL = '/docs'
+SWAGGER_URL = '/swagger'
 API_URL = '/static/swagger.json'
 
 swaggerui_blueprint = get_swaggerui_blueprint(

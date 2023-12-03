@@ -8,6 +8,14 @@
     "host": "localhost:5000",
     "basePath": "/",
     "schemes": ["http"],
+    "securityDefinitions": {
+      "Bearer": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header",
+        "description": "JWT Authorization header using the Bearer scheme. Example: 'Bearer {token}'"
+      }
+    },
     "paths": {
       "/auth/register": {
       "post": {
@@ -57,7 +65,10 @@
       ],
       "responses": {
         "200": {
-          "description": "Login successful"
+          "description": "Login successful",
+          "schema": {
+            "$ref": "#/definitions/Token"
+          }
         },
         "401": {
           "description": "Invalid username or password"
@@ -207,12 +218,28 @@
             "404": {
               "description": "Category not found"
             }
-          }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
         }
       }
        
     },
     "definitions": {
+      "Token": {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string"
+          },
+          "token_type": {
+            "type": "string"
+          }
+        }
+      },
       "User": {
         "type": "object",
         "properties": {
