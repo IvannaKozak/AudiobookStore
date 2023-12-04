@@ -131,6 +131,51 @@
         }
       },
       "/audiobook/{audiobookId}": {
+        "put": {
+          "tags": ["audiobook"],
+          "summary": "Update an existing audiobook",
+          "description": "Updates an audiobook with the given ID.",
+          "operationId": "updateAudiobook",
+          "consumes": ["application/json"],
+          "produces": ["application/json"],
+          "parameters": [
+            {
+              "name": "audiobookId",
+              "in": "path",
+              "required": true,
+              "type": "integer",
+              "description": "ID of the audiobook to update"
+            },
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Audiobook object with updated fields",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/Audiobook"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Audiobook updated successfully",
+              "schema": {
+                "$ref": "#/definitions/Audiobook"
+              }
+            },
+            "400": {
+              "description": "Invalid input"
+            },
+            "404": {
+              "description": "Audiobook not found"
+            }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        },
         "delete": {
           "tags": [
             "audiobook"

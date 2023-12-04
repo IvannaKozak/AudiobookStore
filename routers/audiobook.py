@@ -33,3 +33,16 @@ def delete_audiobook(audiobook_id):
     db.session.commit()
     return jsonify({"message": "Audiobook deleted"}), 200
 
+
+@audiobook_bp.route('/<int:audiobook_id>', methods=['PUT'])
+@token_required
+def update_audiobook(audiobook_id):
+    data = request.get_json()
+    audiobook = Audiobook.query.get_or_404(audiobook_id)
+    
+    audiobook.title = data.get('title', audiobook.title)
+    audiobook.description = data.get('description', audiobook.description)
+    audiobook.category_id = data.get('category_id', audiobook.category_id)
+    
+    db.session.commit()
+    return jsonify({"message": "Audiobook updated", "id": audiobook.id}), 200
