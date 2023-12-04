@@ -79,27 +79,3 @@ def login_for_access_token():
     else:
         return jsonify({"message": "Invalid username or password"}), 401
     
-
-
-# @auth_bp.route('/login', methods=['POST'])
-# def login():
-#     username = request.form['username']
-#     password = request.form['password']
-
-#     user = User.query.filter_by(username=username).first()
-#     if user and bcrypt.check_password_hash(user.hashed_password, password):
-#         # Generate a token here if needed
-#         return jsonify({"message": "Login successful"}), 200
-#     else:
-#         return jsonify({"message": "Invalid username or password"}), 401
-    
-
-# @auth_bp.route('/login', methods=['POST'])
-# def login():
-#     data = request.get_json()
-#     user = User.query.filter_by(username=data['username']).first()
-
-#     if user and bcrypt.check_password_hash(user.hashed_password, data['password']):
-#         return jsonify({"message": "Login successful"}), 200
-#     else:
-#         return jsonify({"message": "Invalid username or password"}), 401
