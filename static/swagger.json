@@ -94,7 +94,12 @@
                 }
               }
             }
-          }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
         },
         "post": {
           "tags": [
@@ -117,7 +122,12 @@
             "201": {
               "description": "Audiobook created"
             }
-          }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
         }
       },
       "/audiobook/{audiobookId}": {
@@ -148,7 +158,12 @@
             "404": {
               "description": "Audiobook not found"
             }
-          }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
         }
       },
       "/category/": {
@@ -168,7 +183,12 @@
                 }
               }
             }
-          }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
         },
         "post": {
           "tags": [
@@ -191,7 +211,12 @@
             "201": {
               "description": "Category created"
             }
-          }
+          },
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
         }
       },
       "/category/{categoryId}": {
@@ -224,9 +249,54 @@
               "Bearer": []
             }
           ]
+        },
+        "put": {
+          "tags": ["category"],
+        "summary": "Update an existing category",
+        "description": "Updates a category with the given ID.",
+        "operationId": "updateCategory",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "path",
+            "description": "ID of the category to update",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Category object that needs to be updated",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Category"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Category updated successfully",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "404": {
+            "description": "Category not found"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
         }
-      }
-       
+      }  
     },
     "definitions": {
       "Token": {
@@ -297,6 +367,18 @@
           "category_name": {
             "type": "string",
             "example": "Science Fiction"
+          }
+        }
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64"
           }
         }
       }

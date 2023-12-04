@@ -1,16 +1,19 @@
 from flask import Blueprint, jsonify, request
 
 from models import db, Audiobook
+from routers.auth import token_required
 
 audiobook_bp = Blueprint('audiobook_bp', __name__)
 
 @audiobook_bp.route('/', methods=['GET'])
+@token_required
 def get_audiobooks():
     audiobooks = Audiobook.query.all()
     return jsonify([{'id': ab.id, 'title': ab.title, 'description': ab.description, 'category_id': ab.category_id} for ab in audiobooks])
 
 
 @audiobook_bp.route('/', methods=['POST'])
+@token_required
 def add_audiobook():
     data = request.json
     new_audiobook = Audiobook(
@@ -23,6 +26,7 @@ def add_audiobook():
 
 
 @audiobook_bp.route('/<int:audiobook_id>', methods=['DELETE'])
+@token_required
 def delete_audiobook(audiobook_id):
     audiobook = Audiobook.query.get_or_404(audiobook_id)
     db.session.delete(audiobook)
