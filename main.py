@@ -12,7 +12,7 @@ from flask_restful import Api
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:MiUniDB@localhost/AudiobookStoreDatabase'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:MiUniDB@localhost/AudiobookStoreAlembicDatabase'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)

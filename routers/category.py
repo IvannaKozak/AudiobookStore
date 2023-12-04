@@ -44,7 +44,3 @@ def update_category(category_id):
     
     return jsonify({"message": "Category updated", "id": category.id}), 200
 
-
-
-# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJpdmFua2EiLCJpZCI6MSwicm9sZSI6ImFkbWluIiwiZXhwIjoxNzAxNjA5MTE4fQ.LIJIKBAy_3eSJzQvgyZJsYw3x6TDV0wXMM8lX3wC5NQ
-# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJpdmFua2EiLCJpZCI6MSwicm9sZSI6ImFkbWluIiwiZXhwIjoxNzAxNjg5NjA0fQ.vVcpEe8xaEDyy2ISC5pgcc-S84f53yiD_obpHv6FRjI

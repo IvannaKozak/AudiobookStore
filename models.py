@@ -28,15 +28,3 @@ class Audiobook(db.Model):
     description = db.Column(db.String(2000), nullable=True)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=True)
 
-
-
-# class UserLibrary(db.Model):
-#     __tablename__ = 'user_library'
-
-#     id = db.Column(db.Integer, primary_key=True)
-#     status = db.Column(db.String(200), nullable=True)
-#     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
-#     audiobook_id = db.Column(db.Integer, db.ForeignKey('audiobook.id'), nullable=True)
-
-#     # Relationship with UserLibrary
-#     library_entries = db.relationship('UserLibrary', backref='audiobook', lazy=True)
